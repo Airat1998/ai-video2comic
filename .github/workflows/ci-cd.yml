@@ -24,7 +24,7 @@ jobs:
         flake8 backend/ worker/ pdf/ --max-line-length=120
 
     - name: Docker Compose Build
-      run: docker-compose build
+      run: docker compose build
 
     - name: Login to DockerHub
       uses: docker/login-action@v3
@@ -57,6 +57,6 @@ jobs:
         script: |
           cd ~/ai-video2comic
           git pull
-          docker-compose down
-          docker-compose pull
-          docker-compose up -d
+          docker compose down
+          docker compose pull
+          docker compose up -d
