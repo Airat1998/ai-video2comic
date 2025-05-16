@@ -3,27 +3,32 @@ import cv2
 import torch
 from PIL import Image
 from transformers import BlipProcessor, BlipForConditionalGeneration
-from diffusers import StableDiffusionControlNetPipeline, ControlNetModel, UniPCMultistepScheduler
+from diffusers import (
+    StableDiffusionControlNetPipeline,
+    ControlNetModel,
+    UniPCMultistepScheduler,
+)
 from controlnet_aux import CannyDetector
 from pdf.comic_maker import make_comic, get_stylized_images
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
 blip_processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
-blip_model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base").to(device)
+blip_model = BlipForConditionalGeneration.from_pretrained(
+    "Salesforce/blip-image-captioning-base"
+).to(device)
 
 canny = CannyDetector()
 
 controlnet = ControlNetModel.from_pretrained(
-    "lllyasviel/sd-controlnet-canny",
-    torch_dtype=torch.float16
+    "lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16
 )
 
 pipe = StableDiffusionControlNetPipeline.from_pretrained(
     "runwayml/stable-diffusion-v1-5",
     controlnet=controlnet,
     safety_checker=None,
-    torch_dtype=torch.float16
+    torch_dtype=torch.float16,
 ).to(device)
 
 pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)
@@ -45,7 +50,7 @@ def stylize_frame(frame_path, output_path):
     result = pipe(
         prompt=f"comic book style, {caption}",
         image=control_image,
-        num_inference_steps=30
+        num_inference_steps=30,
     )
     result.images[0].save(output_path)
     print(f"✅ Сохранено: {output_path}")

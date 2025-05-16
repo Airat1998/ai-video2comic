@@ -9,6 +9,7 @@ app = FastAPI()
 DATA_DIR = "/app/data"
 HOST = "http://46.17.99.9:8000"
 
+
 @app.post("/convert/")
 async def convert(video: UploadFile = File(...)):
     save_path = os.path.join(DATA_DIR, video.filename)
@@ -17,6 +18,7 @@ async def convert(video: UploadFile = File(...)):
 
     task = celery_app.send_task("worker.process_video", args=[save_path])
     return {"task_id": task.id}
+
 
 @app.get("/status/{task_id}")
 def get_status(task_id: str):
@@ -33,6 +35,7 @@ def get_status(task_id: str):
         response["download_url"] = f"{HOST}/download/{filename}"
 
     return response
+
 
 @app.get("/download/{filename}")
 async def download(filename: str):

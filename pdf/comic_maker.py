@@ -3,6 +3,7 @@ from reportlab.lib.pagesizes import A4
 from PIL import Image
 import os
 
+
 def get_stylized_images(video_path):
     stylized_dir = "/app/data/stylized"
     image_paths = [
@@ -12,8 +13,11 @@ def get_stylized_images(video_path):
     ]
     return image_paths
 
+
 def make_comic(image_paths, video_path):
-    pdf_path = video_path.replace(".mp4", ".pdf").replace("/app/data/", "/app/data/comics_")
+    pdf_path = video_path.replace(".mp4", ".pdf").replace(
+        "/app/data/", "/app/data/comics_"
+    )
     c = canvas.Canvas(pdf_path, pagesize=A4)
 
     width, height = A4
