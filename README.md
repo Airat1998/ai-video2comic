@@ -14,4 +14,6 @@ FastAPI + Celery + StableDiffusion + ControlNet + BLIP = готовый коми
 ##  Запуск
 
 docker-compose up --build
-# Trigger CI/CD
+
+
+### project off, last test commit CI/CD
